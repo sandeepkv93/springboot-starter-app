@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: springboot-web-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springbootdb
+    username: ***REMOVED***
+    password: ***REMOVED***
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: ***REMOVED***
+  expiration: 86400000 # 1 day
+  refresh-expiration: 604800000 # 7 days
