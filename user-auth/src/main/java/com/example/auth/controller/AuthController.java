@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
   private final UserService userService;
@@ -28,6 +28,21 @@ public class AuthController {
   @PostMapping("/logout")
   public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
     userService.logout(token);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/change-password")
+  public ResponseEntity<Void> changePassword(
+      @RequestHeader("Authorization") String token,
+      @RequestParam String oldPassword,
+      @RequestParam String newPassword) {
+    userService.changePassword(token, oldPassword, newPassword);
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/delete")
+  public ResponseEntity<Void> deleteUser(@RequestHeader("Authorization") String token) {
+    userService.deleteUser(token);
     return ResponseEntity.ok().build();
   }
 }

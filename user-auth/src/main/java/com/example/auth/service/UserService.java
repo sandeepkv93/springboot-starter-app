@@ -66,4 +66,29 @@ public class UserService {
     String jwt = token.substring(7);
     jwtService.extractUsername(jwt); // This will throw if token is invalid
   }
+
+  public void changePassword(String token, String oldPassword, String newPassword) {
+    String userEmail = jwtService.extractUsername(token.substring(7));
+    User user =
+        userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+      throw new CustomException("Invalid old password", HttpStatus.BAD_REQUEST);
+    }
+
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
+  }
+
+  public void deleteUser(String token) {
+    String userEmail = jwtService.extractUsername(token.substring(7));
+    User user =
+        userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+
+    userRepository.delete(user);
+  }
 }
