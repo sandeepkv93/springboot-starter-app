@@ -14,9 +14,4 @@ public class TestService {
   public String getProtectedMessage() {
     return "This is a protected endpoint - only authenticated users can access it";
   }
-
-  @PreAuthorize("hasRole('ADMIN')")
-  public String getAdminMessage() {
-    return "This is an admin endpoint - only users with ADMIN role can access it";
-  }
 }

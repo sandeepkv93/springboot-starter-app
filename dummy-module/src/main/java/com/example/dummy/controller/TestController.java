@@ -23,9 +23,4 @@ public class TestController {
   public ResponseEntity<String> protectedEndpoint() {
     return ResponseEntity.ok(testService.getProtectedMessage());
   }
-
-  @GetMapping("/admin")
-  public ResponseEntity<String> adminEndpoint() {
-    return ResponseEntity.ok(testService.getAdminMessage());
-  }
 }
