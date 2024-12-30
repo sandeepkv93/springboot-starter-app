@@ -1,8 +1,9 @@
 package com.example.auth.model;
 
-import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

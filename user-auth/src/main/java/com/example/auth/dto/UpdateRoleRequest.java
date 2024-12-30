@@ -1,10 +1,12 @@
 package com.example.auth.dto;
 
+import java.util.Set;
+
 import com.example.auth.model.Permission;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

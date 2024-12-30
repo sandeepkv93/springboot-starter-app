@@ -31,6 +31,7 @@
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+        <impsort-maven-plugin.version>1.9.0</impsort-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -80,7 +81,7 @@
                     <testSourceDirectory>${project.build.testSourceDirectory}</testSourceDirectory>
                     <verbose>true</verbose>
                     <filesNamePattern>.*\.java</filesNamePattern>
-                    <skipSortingImports>false</skipSortingImports>
+                    <skipSortingImports>true</skipSortingImports>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -89,6 +90,30 @@
                         <version>${google-java-format.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <!-- Import optimization -->
+            <plugin>
+                <groupId>net.revelc.code</groupId>
+                <artifactId>impsort-maven-plugin</artifactId>
+                <version>${impsort-maven-plugin.version}</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <groups>java.,javax.,org.,com.</groups>
+                    <staticGroups>java,*</staticGroups>
+                    <staticAfter>true</staticAfter>
+                    <removeUnused>true</removeUnused>
+                    <lineEnding>LF</lineEnding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sort-imports</id>
+                        <goals>
+                            <goal>sort</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

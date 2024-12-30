@@ -1,7 +1,9 @@
 package com.example.auth.dto;
 
-import com.example.auth.model.Permission;
 import java.util.Set;
+
+import com.example.auth.model.Permission;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

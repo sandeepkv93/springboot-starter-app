@@ -1,16 +1,9 @@
 package com.example.auth.service;
 
-import com.example.auth.dto.*;
-import com.example.auth.exception.CustomException;
-import com.example.auth.model.Permission;
-import com.example.auth.model.Role;
-import com.example.auth.model.User;
-import com.example.auth.repository.RoleRepository;
-import com.example.auth.repository.UserRepository;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +12,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.auth.dto.*;
+import com.example.auth.exception.CustomException;
+import com.example.auth.model.Permission;
+import com.example.auth.model.Role;
+import com.example.auth.model.User;
+import com.example.auth.repository.RoleRepository;
+import com.example.auth.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

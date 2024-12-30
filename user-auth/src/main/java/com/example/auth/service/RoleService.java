@@ -1,5 +1,14 @@
 package com.example.auth.service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.auth.dto.CreateRoleRequest;
 import com.example.auth.dto.RoleResponse;
 import com.example.auth.dto.UpdateRoleRequest;
@@ -8,15 +17,9 @@ import com.example.auth.model.Permission;
 import com.example.auth.model.Role;
 import com.example.auth.model.RoleHierarchy;
 import com.example.auth.repository.RoleRepository;
+
 import jakarta.annotation.PostConstruct;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

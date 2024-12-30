@@ -2,6 +2,7 @@ package com.example.auth.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import lombok.Getter;
 
 @Getter

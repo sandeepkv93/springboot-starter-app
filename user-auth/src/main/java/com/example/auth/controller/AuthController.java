@@ -1,12 +1,14 @@
 package com.example.auth.controller;
 
-import com.example.auth.dto.*;
-import com.example.auth.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.auth.dto.*;
+import com.example.auth.service.UserService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/auth")

@@ -1,14 +1,17 @@
 package com.example.auth.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.auth.dto.CreateRoleRequest;
 import com.example.auth.dto.RoleResponse;
 import com.example.auth.dto.UpdateRoleRequest;
 import com.example.auth.service.RoleService;
+
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/roles")
