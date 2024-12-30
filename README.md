@@ -1,169 +1,311 @@
-# Spring Boot Starter Application
+# README
 
-A modular Spring Boot application demonstrating user authentication, JWT token management, and module integration. This project provides a robust starting point for building secure Spring Boot applications with user management capabilities.
+# 🚀 Spring Boot Authentication Starter
 
-## Project Structure
+A robust, production-ready Spring Boot starter template featuring comprehensive user authentication, role-based access control (RBAC), and JWT token management. Built with modern best practices and a modular architecture.
 
-The project is organized into three main modules:
+## ✨ Key Features
 
-- **user-auth**: Core authentication and user management module
-- **dummy-module**: Example module demonstrating integration with user-auth
-- **web-app**: Main application module tying everything together
+- 🔐 Advanced JWT Authentication & Authorization
+- 👥 Role-Based Access Control (RBAC)
+- 🏗️ Modular Architecture
+- 🔒 Secure Password Handling with BCrypt
+- 🌐 RESTful API Design
+- 📝 Comprehensive API Documentation
+- ⚡ Performance Optimized
+- 🔍 Global Exception Handling
+- 🎯 Request Validation
+- 📊 PostgreSQL Integration
 
-### Technology Stack
+## 🏛️ Project Structure
 
-- Java 17
-- Spring Boot 3.4.1
-- Spring Security
-- JWT Authentication
-- PostgreSQL
-- Project Lombok
-- Maven
+```text
+springboot-starter-app/
+├── user-auth/           # Core authentication module
+├── dummy-module/        # Example integration module
+└── web-app/            # Main application module
+```
 
-## Features
+## 🛠️ Tech Stack
 
-- User authentication and authorization
-- JWT token-based security
-- Modular architecture
-- RESTful API endpoints
-- Database persistence with JPA/Hibernate
-- Password encryption with BCrypt
-- Global exception handling
-- Database schema auto-generation
+- ☕ Java 17
+- 🍃 Spring Boot 3.4.1
+- 🛡️ Spring Security
+- 🎟️ JWT Authentication
+- 🐘 PostgreSQL
+- 📝 Project Lombok
+- 🏗️ Maven
 
-## Prerequisites
+## ⚙️ Prerequisites
 
-- JDK 17 or higher
+- Java JDK 17+
 - Maven 3.6+
 - PostgreSQL 12+
-- Docker (optional, for containerization)
+- Docker (optional)
 
-## Getting Started
+## 🚀 Getting Started
 
-### 1. Clone the Repository
+1. **Clone the Repository**
 
 ```bash
-git clone git@github.com:sandeepkv93/springboot-starter-app.git
+git clone <https://github.com/yourusername/springboot-starter-app.git>
 cd springboot-starter-app
 ```
 
-### 2. Configure Database
+1. Configure Database
 
-Create a PostgreSQL database and update the configuration in `web-app/src/main/resources/application.yml`:
-
-```yaml
+```bash
+# web-app/src/main/resources/application.yml
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/springbootdb
-    username: ***REMOVED***
-    password: ***REMOVED***
+    username: your_username
+    password: your_password
 ```
 
-### 3. Build the Project
+1. Build & Run
 
 ```bash
 mvn clean install
-```
-
-### 4. Run the Application
-
-```bash
 cd web-app
 mvn spring-boot:run
 ```
 
-The application will start on `http://localhost:8080`
-
-## API Endpoints
-
-### Authentication Endpoints
-
-All authentication endpoints are prefixed with `/api/v1/auth`
+## 🔑 Authentication API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/signup` | Register a new user |
-| POST | `/login` | Authenticate user and get tokens |
-| POST | `/logout` | Logout user |
-| POST | `/change-password` | Change user password |
-| DELETE | `/delete` | Delete user account |
+| --- | --- | --- |
+| POST | `/api/v1/auth/signup` | Register new user |
+| POST | `/api/v1/auth/login` | User login |
+| GET | `/api/v1/auth/profile` | Get current user |
+| POST | `/api/v1/auth/logout` | Logout user |
+| POST | `/api/v1/auth/change-password` | Change password |
+| DELETE | `/api/v1/auth/delete` | Delete account |
 
-### Test Endpoints
-
-All test endpoints are prefixed with `/api/v1/test`
+## 👥 Role Management API
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/public` | Public endpoint (no auth required) |
-| GET | `/protected` | Protected endpoint (requires authentication) |
+| --- | --- | --- |
+| GET | `/api/v1/roles` | Get all roles |
+| POST | `/api/v1/roles` | Create new role |
+| PUT | `/api/v1/roles/{id}` | Update role |
+| DELETE | `/api/v1/roles/{id}` | Delete role |
 
-## Request Examples
+## 📝 API Examples
 
 ### User Registration
 
-```json
+```http
 POST /api/v1/auth/signup
+Content-Type: application/json
+
 {
     "email": "user@example.com",
-    "password": "password123",
+    "password": "SecureP@ss123",
     "firstName": "John",
     "lastName": "Doe"
 }
 ```
 
-### User Login
+**Response**:
 
 ```json
-POST /api/v1/auth/login
 {
+    "id": 1,
     "email": "user@example.com",
-    "password": "password123"
+    "firstName": "John",
+    "lastName": "Doe",
+    "message": "User registered successfully"
 }
 ```
 
-## Security Configuration
+### User Login
 
-The application uses JWT (JSON Web Tokens) for authentication. Key security settings:
+```http
+POST /api/v1/auth/login
+Content-Type: application/json
 
-- Token expiration: 24 hours (configurable in application.yml)
-- Password encoding: BCrypt
-- CSRF protection: Disabled for API endpoints
-- Session management: Stateless
+{
+    "email": "user@example.com",
+    "password": "SecureP@ss123"
+}
 
-## Module Details
+```
 
-### user-auth Module
+**Response**:
 
-Core authentication module providing:
-- User management
-- JWT token handling
-- Security configuration
-- Authentication filters
+```json
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5..."
+}
+```
 
-### dummy-module
+### Get Current User Profile
 
-Example module demonstrating:
+```http
+GET /api/v1/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5...
+```
+
+**Response**:
+
+```json
+{
+    "id": 1,
+    "email": "user@example.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "roles": ["ROLE_USER"],
+    "permissions": ["user:read"]
+}
+```
+
+### Create New Role (Admin Only)
+
+```http
+POST /api/v1/roles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5...
+Content-Type: application/json
+
+{
+    "name": "ROLE_MANAGER",
+    "permissions": [
+        "USER_READ",
+        "USER_UPDATE",
+        "ROLE_READ"
+    ]
+}
+```
+
+**Response**:
+
+```json
+{
+    "id": 3,
+    "name": "ROLE_MANAGER",
+    "permissions": [
+        "USER_READ",
+        "USER_UPDATE",
+        "ROLE_READ"
+    ]
+}
+```
+
+### Update User Roles
+
+```http
+PUT /api/v1/users/1/roles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5...
+Content-Type: application/json
+
+{
+    "roleNames": ["ROLE_USER", "ROLE_MANAGER"]
+}
+```
+
+**Response**:
+
+```json
+{
+    "id": 1,
+    "email": "user@example.com",
+    "roles": ["ROLE_USER", "ROLE_MANAGER"],
+    "permissions": ["user:read", "user:update"]
+}
+```
+
+### Change Password
+
+```http
+POST /api/v1/auth/change-password?oldPassword=SecureP@ss123&newPassword=NewP@ss123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5...
+```
+
+**Response**:
+
+```json
+{
+    "message": "Password changed successfully"
+}
+```
+
+### Error Response Examples
+
+**400 Bad Request**:
+
+```json
+{
+    "message": "Validation failed",
+    "errors": {
+        "email": "Email is already in use",
+        "password": "Password must contain at least one uppercase letter"
+    }
+}
+```
+
+**401 Unauthorized**:
+
+```json
+{
+    "message": "Invalid credentials"
+}
+```
+
+**403 Forbidden**:
+
+```json
+{
+    "message": "Access denied: Insufficient permissions"
+}
+```
+
+**404 Not Found**:
+
+```json
+{
+    "message": "User not found"
+}
+```
+
+## 🔒 Security Features
+
+- 🔑 JWT Token Authentication
+- ⏰ Configurable Token Expiration
+- 🔐 BCrypt Password Encoding
+- 🛡️ Role-Based Access Control
+- 🚫 CSRF Protection
+- 📡 Stateless Session Management
+
+## 🏗️ Module Overview
+
+### 🔐 user-auth
+
+- Core authentication & authorization
+- JWT token management
+- User & role management
+- Security configurations
+
+### 🎯 dummy-module
+
+- Integration example
 - Protected endpoints
-- Integration with user-auth module
-- Custom service implementation
+- Service implementation patterns
 
-### web-app Module
+### 🌐 web-app
 
-Main application module:
-- Application configuration
-- Database settings
-- Module integration
-- Main application entry point
+- Main application configuration
+- Database integration
+- Module orchestration
+- Application bootstrapping
 
-## Configuration Properties
-
-Key configuration properties in `application.yml`:
+## ⚙️ Configuration
 
 ```yaml
+# Key application properties
 jwt:
-  secret: [your-secret-key]
-  expiration: 86400000 # 24 hours in milliseconds
-  refresh-expiration: 604800000 # 7 days in milliseconds
+  secret: your_jwt_secret_key
+  expiration: 86400000# 24 hours
+  refresh-expiration: 604800000# 7 days
 
 spring:
   jpa:
