@@ -24,6 +24,82 @@ class TestControllerTest {
   @InjectMocks private TestController testController;
 
   @Nested
+  class EndpointTests {
+
+    @Test
+    void publicEndpoint_ShouldAlwaysBeAccessible() {
+      // Arrange
+      String expectedMessage = "public message";
+      when(testService.getPublicMessage()).thenReturn(expectedMessage);
+
+      // Act
+      ResponseEntity<String> response = testController.publicEndpoint();
+
+      // Assert
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isEqualTo(expectedMessage);
+      verify(testService).getPublicMessage();
+    }
+
+    @Test
+    void authenticatedEndpoint_WhenAuthenticated_ShouldReturnMessage() {
+      // Arrange
+      String expectedMessage = "authenticated message";
+      when(testService.getAuthenticatedMessage()).thenReturn(expectedMessage);
+
+      // Act
+      ResponseEntity<String> response = testController.authenticatedEndpoint();
+
+      // Assert
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isEqualTo(expectedMessage);
+      verify(testService).getAuthenticatedMessage();
+    }
+
+    @Test
+    void authenticatedEndpoint_WhenNotAuthenticated_ShouldThrowException() {
+      // Arrange
+      when(testService.getAuthenticatedMessage())
+          .thenThrow(new AccessDeniedException("Not authenticated"));
+
+      // Act & Assert
+      assertThrows(AccessDeniedException.class, () -> testController.authenticatedEndpoint());
+      verify(testService).getAuthenticatedMessage();
+    }
+
+    @Test
+    void userEndpoint_WithUserRole_ShouldReturnMessage() {
+      // Arrange
+      String expectedMessage = "user message";
+      when(testService.getUserMessage()).thenReturn(expectedMessage);
+
+      // Act
+      ResponseEntity<String> response = testController.userEndpoint();
+
+      // Assert
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isEqualTo(expectedMessage);
+      verify(testService).getUserMessage();
+    }
+
+    @Test
+    void dynamicPermissionEndpoint_WithValidResource_ShouldReturnMessage() {
+      // Arrange
+      String resource = "user";
+      String expectedMessage = "dynamic permission message";
+      when(testService.getDynamicPermissionMessage(resource)).thenReturn(expectedMessage);
+
+      // Act
+      ResponseEntity<String> response = testController.dynamicPermissionEndpoint(resource);
+
+      // Assert
+      assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+      assertThat(response.getBody()).isEqualTo(expectedMessage);
+      verify(testService).getDynamicPermissionMessage(resource);
+    }
+  }
+
+  @Nested
   class PublicEndpoint {
     @Test
     void shouldReturnPublicMessage() {

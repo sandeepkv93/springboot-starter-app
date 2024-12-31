@@ -24,6 +24,9 @@ public class JwtService {
   @Value("${jwt.expiration}")
   private long jwtExpiration;
 
+  @Value("${jwt.refresh-expiration}")
+  private long refreshTokenExpiration;
+
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
   }
@@ -42,13 +45,27 @@ public class JwtService {
         .compact();
   }
 
+  public String generateRefreshToken(UserDetails userDetails) {
+    return Jwts.builder()
+        .setSubject(userDetails.getUsername())
+        .setIssuedAt(new Date(System.currentTimeMillis()))
+        .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+        .compact();
+  }
+
   public boolean isTokenValid(String token, UserDetails userDetails) {
     final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    return (username.equals(userDetails.getUsername())) && isTokenExpired(token);
   }
 
   private boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
+    return !extractExpiration(token).before(new Date());
+  }
+
+  public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
+    final String username = extractUsername(token);
+    return (username.equals(userDetails.getUsername())) && isTokenExpired(token);
   }
 
   private Date extractExpiration(String token) {

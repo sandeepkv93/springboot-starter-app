@@ -32,6 +32,79 @@ class TestServiceTest {
   @Autowired private TestService testService;
 
   @Nested
+  class SecurityAnnotationTests {
+
+    @Test
+    void getPublicMessage_ShouldAlwaysBeAccessible() {
+      String message = testService.getPublicMessage();
+      assertThat(message).isNotEmpty();
+    }
+
+    @Test
+    void getAuthenticatedMessage_WithoutAuth_ShouldThrowException() {
+      assertThrows(
+          AuthenticationCredentialsNotFoundException.class,
+          () -> testService.getAuthenticatedMessage(),
+          "Expected AuthenticationCredentialsNotFoundException when no credentials present");
+    }
+
+    @Test
+    @WithMockUser
+    void getAuthenticatedMessage_WithAuth_ShouldSucceed() {
+      String message = testService.getAuthenticatedMessage();
+      assertThat(message).contains("requires authentication");
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getUserMessage_WithUserRole_ShouldSucceed() {
+      String message = testService.getUserMessage();
+      assertThat(message).contains("USER role");
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void getUserMessage_WithoutUserRole_ShouldThrowException() {
+      assertThrows(
+          AccessDeniedException.class,
+          () -> testService.getUserMessage(),
+          "Expected AccessDeniedException when user lacks required role");
+    }
+
+    @Test
+    @WithMockUser(authorities = "user:read")
+    void getPermissionBasedMessage_WithCorrectPermission_ShouldSucceed() {
+      String message = testService.getPermissionBasedMessage();
+      assertThat(message).contains("specific permission");
+    }
+
+    @Test
+    @WithMockUser(authorities = "user:write")
+    void getPermissionBasedMessage_WithWrongPermission_ShouldThrowException() {
+      assertThrows(
+          AccessDeniedException.class,
+          () -> testService.getPermissionBasedMessage(),
+          "Expected AccessDeniedException when user lacks required permission");
+    }
+
+    @Test
+    @WithMockUser(authorities = "resource:read")
+    void getDynamicPermissionMessage_WithMatchingPermission_ShouldSucceed() {
+      String message = testService.getDynamicPermissionMessage("resource");
+      assertThat(message).contains("dynamic permission: resource:read");
+    }
+
+    @Test
+    @WithMockUser(authorities = "other:read")
+    void getDynamicPermissionMessage_WithNonMatchingPermission_ShouldThrowException() {
+      assertThrows(
+          AccessDeniedException.class,
+          () -> testService.getDynamicPermissionMessage("resource"),
+          "Expected AccessDeniedException when user lacks required dynamic permission");
+    }
+  }
+
+  @Nested
   class PublicEndpoint {
     @Test
     void shouldAllowAccessWithoutAuthentication() {

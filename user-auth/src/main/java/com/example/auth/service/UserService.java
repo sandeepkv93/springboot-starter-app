@@ -76,9 +76,29 @@ public class UserService {
             .findByEmail(request.getEmail())
             .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
-    String token = jwtService.generateToken(user);
+    String accessToken = jwtService.generateToken(user);
+    String refreshToken = jwtService.generateRefreshToken(user);
 
-    return TokenResponse.builder().accessToken(token).build();
+    return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+  }
+
+  public TokenResponse refreshToken(String refreshToken) {
+    String token = refreshToken.substring(7); // Remove "Bearer " prefix
+    String userEmail = jwtService.extractUsername(token);
+
+    User user =
+        userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+
+    if (jwtService.isRefreshTokenValid(token, user)) {
+      String accessToken = jwtService.generateToken(user);
+      String newRefreshToken = jwtService.generateRefreshToken(user);
+
+      return TokenResponse.builder().accessToken(accessToken).refreshToken(newRefreshToken).build();
+    }
+
+    throw new CustomException("Invalid refresh token", HttpStatus.UNAUTHORIZED);
   }
 
   @PreAuthorize("hasAuthority('user:update')")

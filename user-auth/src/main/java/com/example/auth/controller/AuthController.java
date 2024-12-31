@@ -32,6 +32,12 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
+  @PostMapping("/refresh")
+  public ResponseEntity<TokenResponse> refreshToken(
+      @RequestHeader("Authorization") String refreshToken) {
+    return ResponseEntity.ok(userService.refreshToken(refreshToken));
+  }
+
   @PostMapping("/change-password")
   public ResponseEntity<Void> changePassword(
       @RequestHeader("Authorization") String token,
